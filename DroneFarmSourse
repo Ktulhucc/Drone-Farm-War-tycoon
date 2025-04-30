@@ -1,0 +1,90 @@
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "DroneGUI"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 200, 0, 150)
+frame.Position = UDim2.new(0.5, -100, 0.5, -75)
+frame.BackgroundColor3 = Color3.new(0, 0, 0)
+frame.BorderSizePixel = 0
+frame.Active = true
+frame.Draggable = true
+frame.Parent = screenGui
+
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 30)
+title.Position = UDim2.new(0, 0, 0, 0)
+title.Text = "Farm Drone"
+title.TextColor3 = Color3.new(1, 1, 1)
+title.BackgroundTransparency = 1
+title.Font = Enum.Font.SourceSansBold
+title.TextSize = 24
+title.Parent = frame
+
+
+local gotoButton = Instance.new("TextButton")
+gotoButton.Size = UDim2.new(1, -20, 0, 40)
+gotoButton.Position = UDim2.new(0, 10, 0, 40)
+gotoButton.Text = "GoTo Drone"
+gotoButton.TextColor3 = Color3.new(0, 0, 0)
+gotoButton.BackgroundColor3 = Color3.new(1, 1, 1)
+gotoButton.Font = Enum.Font.SourceSans
+gotoButton.TextSize = 18
+gotoButton.Parent = frame
+
+
+local sellButton = Instance.new("TextButton")
+sellButton.Size = UDim2.new(1, -20, 0, 40)
+sellButton.Position = UDim2.new(0, 10, 0, 90)
+sellButton.Text = "Sell Drone"
+sellButton.TextColor3 = Color3.new(0, 0, 0)
+sellButton.BackgroundColor3 = Color3.new(1, 1, 1)
+sellButton.Font = Enum.Font.SourceSans
+sellButton.TextSize = 18
+sellButton.Parent = frame
+
+
+
+
+local function getRootPart()
+	local character = player.Character or player.CharacterAdded:Wait()
+	return character:WaitForChild("HumanoidRootPart")
+end
+
+
+local function findCrashedDrone()
+	for _, obj in ipairs(workspace:GetDescendants()) do
+		if obj:IsA("BasePart") and obj.Name:match("^CrashedDrone%d*$") then
+			return obj
+		end
+	end
+	return nil
+end
+
+
+
+gotoButton.MouseButton1Click:Connect(function()
+	local rootPart = getRootPart()
+	local drone = findCrashedDrone()
+
+	if drone then
+		rootPart.CFrame = drone.CFrame + Vector3.new(0, 5, 0) 
+	else
+		warn("CrashedDrone не найден.")
+	end
+end)
+
+sellButton.MouseButton1Click:Connect(function()
+	local rootPart = getRootPart()
+
+	
+	local targetPosition = Vector3.new(-1182.692138671875, 66.80099487304688, -4518.88427734375)
+	rootPart.CFrame = CFrame.new(targetPosition)
+end)
